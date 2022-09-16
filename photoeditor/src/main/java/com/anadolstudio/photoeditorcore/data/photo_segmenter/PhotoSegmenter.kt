@@ -1,6 +1,7 @@
 package com.anadolstudio.photoeditorcore.data.photo_segmenter
 
 import android.graphics.Bitmap
+import com.anadolstudio.domain.Test
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.segmentation.Segmentation
 import com.google.mlkit.vision.segmentation.selfie.SelfieSegmenterOptions
@@ -16,6 +17,8 @@ class PhotoSegmenter {
         val options = SelfieSegmenterOptions.Builder()
                 .setDetectorMode(SelfieSegmenterOptions.SINGLE_IMAGE_MODE)
                 .build()
+
+        Test.test()
 
         val image = InputImage.fromBitmap(bitmap, 0)
 
