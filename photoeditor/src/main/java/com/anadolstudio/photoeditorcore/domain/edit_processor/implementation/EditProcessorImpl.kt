@@ -75,8 +75,8 @@ class EditProcessorImpl : EditProcessor {
             onSuccess: (T) -> Unit,
             onError: ((Throwable) -> Unit)? = null
     ): Disposable = this.subscribe(
-            { t ->
-                onSuccess.invoke(t)
+            { data ->
+                onSuccess.invoke(data)
                 _editProcessorEvent.onNext(EditProcessorEvent.Loading(false))
             },
             { error ->
