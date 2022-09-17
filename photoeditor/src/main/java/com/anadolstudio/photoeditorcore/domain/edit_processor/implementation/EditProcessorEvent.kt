@@ -1,6 +1,8 @@
 package com.anadolstudio.photoeditorcore.domain.edit_processor.implementation
 
-sealed class EditProcessorEvent {
+import com.anadolstudio.core.livedata.SingleCustomEvent
+
+sealed class EditProcessorEvent : SingleCustomEvent() {
 
     class Loading(val isLoading: Boolean) : EditProcessorEvent()
 
@@ -10,7 +12,7 @@ sealed class EditProcessorEvent {
 
         object ImageLoaded : Success()
 
-        object ImageSaved : Success()
+        class ImageSaved(val path: String) : Success()
 
     }
 

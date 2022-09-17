@@ -1,49 +1,25 @@
 package com.anadolstudio.photoeditorcore.domain.util
 
-import android.content.Context
+import android.content.res.Resources
 import android.graphics.Point
 import android.util.DisplayMetrics
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import kotlin.math.max
-import kotlin.math.roundToInt
 
 object DisplayUtil {
-    fun dpToPx(context: Context, dp: Int): Int {
-        val displayMetrics = context.resources.displayMetrics
-        return (dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
-    }
 
-    fun pxToDp(context: Context, px: Int): Int {
-        val displayMetrics = context.resources.displayMetrics
-        return (px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
-    }
-
-    fun getDefaultSize(activity: AppCompatActivity): DisplayMetrics {
-        //TODO Возвращаемое значение заменить на x и y
-        val displayMetrics = DisplayMetrics()
-
-        /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-        activity.display?.getRealMetrics(displayMetrics)
-        //TODO значения различаются
-    } else {
-        @Suppress("DEPRECATION")
-        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
-    }*/
-        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
-        return displayMetrics
-    }
+    fun getDefaultSize(): DisplayMetrics = Resources.getSystem().displayMetrics
 
     // TODO need Test
     fun workspaceSize(
-            activity: AppCompatActivity,
             vararg views: View,
             checkWidth: Boolean = false,
             checkHeight: Boolean = true
     ): Point {
-        val dm = getDefaultSize(activity)
+        val displayMetrics = getDefaultSize()
+
         return with(views) {
-            val result = Point(dm.widthPixels, dm.heightPixels)
+            val result = Point(displayMetrics.widthPixels, displayMetrics.heightPixels)
 
             if (isEmpty()) return result
 
