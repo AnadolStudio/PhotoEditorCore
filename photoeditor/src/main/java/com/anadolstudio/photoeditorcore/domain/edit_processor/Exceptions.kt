@@ -1,4 +1,4 @@
-package com.anadolstudio.photoeditorcore.data.edit_processor
+package com.anadolstudio.photoeditorcore.domain.edit_processor
 
 sealed class PhotoEditException(message: String) : Exception(message)
 
