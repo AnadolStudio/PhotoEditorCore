@@ -64,7 +64,7 @@ class EditProcessorImpl : EditProcessor {
 
             return@quickSingleFrom BitmapSaver.Factory.save(context, bitmap, nameDir, file)
         }.smartProcessorSubscribe(
-                onSuccess = { _editProcessorEvent.onNext(EditProcessorEvent.Success.ImageSaved) },
+                onSuccess = { path -> _editProcessorEvent.onNext(EditProcessorEvent.Success.ImageSaved(path)) },
                 onError = { _editProcessorEvent.onNext(EditProcessorEvent.Error(FailedSaveException)) }
         ).disposeOnClear()
     }
