@@ -10,7 +10,7 @@ sealed class EditProcessorEvent {
 
         object ImageLoaded : Success()
 
-
+        object ImageSaved : Success()
 
     }
 

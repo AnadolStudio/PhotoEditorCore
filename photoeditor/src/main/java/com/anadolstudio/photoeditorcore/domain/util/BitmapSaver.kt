@@ -116,11 +116,11 @@ interface BitmapSaver {
     object Factory {
 
         fun save(
-                progressListener: ProgressListener<String>?,
                 context: Context,
                 bitmap: Bitmap,
                 nameDir: String,
-                file: File
+                file: File,
+                progressListener: ProgressListener<String>? = null
         ): String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             AboveQ(progressListener)
         } else {
