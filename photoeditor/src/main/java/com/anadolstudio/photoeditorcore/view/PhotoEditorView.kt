@@ -9,5 +9,4 @@ class PhotoEditorView : EditorView {
         TODO("Not yet implemented")
     }
 
-
 }

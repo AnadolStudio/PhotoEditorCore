@@ -9,7 +9,8 @@ import com.anadolstudio.core.livedata.toImmutable
 import com.anadolstudio.core.rx_util.quickSingleFrom
 import com.anadolstudio.photoeditorcore.domain.edit_processor.EditProcessor
 import com.anadolstudio.photoeditorcore.domain.edit_processor.EditorView
-import com.anadolstudio.photoeditorcore.domain.edit_processor.FileParentException
+import com.anadolstudio.photoeditorcore.domain.edit_processor.PhotoEditException.FailedSaveException
+import com.anadolstudio.photoeditorcore.domain.edit_processor.PhotoEditException.InvalidateBitmapException
 import com.anadolstudio.photoeditorcore.domain.util.BitmapSaver
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
@@ -49,7 +50,8 @@ class EditProcessorImpl : EditProcessor {
             editorView.setBitmap(bitmap)
             this.bitmap = bitmap
         }.smartProcessorSubscribe(
-                onSuccess = { _editProcessorEvent.onNext(EditProcessorEvent.Success.ImageLoaded) }
+                onSuccess = { _editProcessorEvent.onNext(EditProcessorEvent.Success.ImageLoaded) },
+                onError = { _editProcessorEvent.onNext(EditProcessorEvent.Error(InvalidateBitmapException)) }
         ).disposeOnClear()
     }
 
@@ -57,26 +59,32 @@ class EditProcessorImpl : EditProcessor {
         _editProcessorEvent.onNext(EditProcessorEvent.Loading(true))
 
         quickSingleFrom {
-            val parent = file.parent ?: throw FileParentException()
+            val parent = file.parent ?: throw FailedSaveException
             val nameDir = parent.substring(parent.lastIndexOf("/"), parent.length)
 
             return@quickSingleFrom BitmapSaver.Factory.save(context, bitmap, nameDir, file)
         }.smartProcessorSubscribe(
-                onSuccess = { _editProcessorEvent.onNext(EditProcessorEvent.Success.ImageSaved) }
+                onSuccess = { _editProcessorEvent.onNext(EditProcessorEvent.Success.ImageSaved) },
+                onError = { _editProcessorEvent.onNext(EditProcessorEvent.Error(FailedSaveException)) }
         ).disposeOnClear()
     }
 
-    override fun onCleared() {
-        compositeDisposable.clear()
-    }
+    override fun onCleared() = compositeDisposable.clear()
 
-    private fun <T> Single<T>.smartProcessorSubscribe(onSuccess: ((T) -> Unit)): Disposable = this.subscribe(
+    private fun <T> Single<T>.smartProcessorSubscribe(
+            onSuccess: (T) -> Unit,
+            onError: ((Throwable) -> Unit)? = null
+    ): Disposable = this.subscribe(
             { t ->
                 onSuccess.invoke(t)
                 _editProcessorEvent.onNext(EditProcessorEvent.Loading(false))
             },
             { error ->
-                _editProcessorEvent.onNext(EditProcessorEvent.Error(error))
+                when (onError != null) {
+                    true -> onError.invoke(error)
+                    false -> _editProcessorEvent.onNext(EditProcessorEvent.Error(error))
+                }
+
                 _editProcessorEvent.onNext(EditProcessorEvent.Loading(false))
             }
     )
