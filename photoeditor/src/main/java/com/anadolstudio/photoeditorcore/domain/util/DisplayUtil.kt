@@ -10,6 +10,8 @@ object DisplayUtil {
 
     fun getDefaultSize(): DisplayMetrics = Resources.getSystem().displayMetrics
 
+    fun onDefaultSize(action: DisplayMetrics.() -> Unit) = action.invoke(Resources.getSystem().displayMetrics)
+
     // TODO need Test
     fun workspaceSize(
             vararg views: View,

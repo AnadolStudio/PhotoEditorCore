@@ -33,5 +33,5 @@ enum class RatioItem(
 
     data class Ratio(var x: Int = 0, var y: Int = 0)
 
-    data class Density(val w: Int = 40, val h: Int = 40)
+    data class Density(val weight: Int = 40, val height: Int = 40)
 }
