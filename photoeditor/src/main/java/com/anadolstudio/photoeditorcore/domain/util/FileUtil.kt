@@ -2,7 +2,6 @@ package com.anadolstudio.photoeditorcore.domain.util
 
 import android.os.Environment
 import android.util.Log
-import com.anadolstudio.core.common_util.TimeUtil
 import java.io.File
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -12,9 +11,10 @@ import java.util.Locale
 object FileUtil {
 
     private const val TAG = "FileUtil"
+    private const val DEFAULT_FORMAT = "yyyy_MM_dd_HHmmss"
 
     fun getFileName(): String {
-        val timeFormat: DateFormat = SimpleDateFormat(TimeUtil.DEFAULT_FORMAT, Locale.getDefault())
+        val timeFormat: DateFormat = SimpleDateFormat(DEFAULT_FORMAT, Locale.getDefault())
         return "IMG_${timeFormat.format(Date())}.jpeg" // TODO JPEG?
     }
 

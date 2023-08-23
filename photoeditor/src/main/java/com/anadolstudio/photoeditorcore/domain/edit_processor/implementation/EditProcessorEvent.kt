@@ -1,8 +1,6 @@
 package com.anadolstudio.photoeditorcore.domain.edit_processor.implementation
 
-import com.anadolstudio.core.livedata.SingleCustomEvent
-
-sealed class EditProcessorEvent : SingleCustomEvent() {
+sealed class EditProcessorEvent {
 
     class Loading(val isLoading: Boolean) : EditProcessorEvent()
 

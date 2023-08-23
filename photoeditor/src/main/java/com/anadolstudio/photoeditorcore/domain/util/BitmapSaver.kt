@@ -11,7 +11,6 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.anadolstudio.core.common_util.ProgressListener
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -24,7 +23,7 @@ interface BitmapSaver {
 
     fun scanFile(context: Context, path: String)
 
-    abstract class Abstract(private val progressListener: ProgressListener<String>?) : BitmapSaver {
+    abstract class Abstract : BitmapSaver {
 
         fun save(
                 context: Context,
@@ -36,13 +35,10 @@ interface BitmapSaver {
             val resolver = context.contentResolver
 
             try {
-                progressListener?.onProgress(10, "Get uri...")
                 uri = getUri(resolver, nameDir, file)
 
-                progressListener?.onProgress(40, "Compress...")
                 val path = compress(resolver, bitmap, uri, file)
 
-                progressListener?.onProgress(100, "Done")
                 scanFile(context, path)
 
                 return path
@@ -63,7 +59,7 @@ interface BitmapSaver {
         }
     }
 
-    class BelowQ(progressListener: ProgressListener<String>?) : Abstract(progressListener) {
+    class BelowQ : Abstract() {
         override fun getUri(resolver: ContentResolver, nameDir: String, file: File): Uri? = null
 
         override fun compress(
@@ -81,7 +77,7 @@ interface BitmapSaver {
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    class AboveQ(progressListener: ProgressListener<String>?) : Abstract(progressListener) {
+    class AboveQ() : Abstract() {
 
         override fun getUri(resolver: ContentResolver, nameDir: String, file: File): Uri {
             val relativePath = Environment.DIRECTORY_PICTURES + File.separator + nameDir
@@ -120,11 +116,10 @@ interface BitmapSaver {
                 bitmap: Bitmap,
                 nameDir: String,
                 file: File,
-                progressListener: ProgressListener<String>? = null
         ): String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            AboveQ(progressListener)
+            AboveQ()
         } else {
-            BelowQ(progressListener)
+            BelowQ()
         }.save(context, bitmap, nameDir, file)
     }
 }
