@@ -33,14 +33,14 @@ class TransformFunction() : EditFunction.Abstract(FuncItem.MainFunctions.TRANSFO
 
     override fun describeContents(): Int = 0
 
-    override fun writeToParcel(parcel: Parcel?, p1: Int) {
-        parcel?.writeFloat(scale)
-        parcel?.writeByte(if (flipHorizontal) 1 else 0)
-        parcel?.writeByte(if (flipVertical) 1 else 0)
-        parcel?.writeFloatArray(cropPoints)
-        parcel?.writeInt(degrees)
-        parcel?.writeString(ratioItem.name)
-        parcel?.writeParcelable(cropRect, Parcelable.PARCELABLE_WRITE_RETURN_VALUE)
+    override fun writeToParcel(parcel: Parcel, p1: Int) {
+        parcel.writeFloat(scale)
+        parcel.writeByte(if (flipHorizontal) 1 else 0)
+        parcel.writeByte(if (flipVertical) 1 else 0)
+        parcel.writeFloatArray(cropPoints)
+        parcel.writeInt(degrees)
+        parcel.writeString(ratioItem.name)
+        parcel.writeParcelable(cropRect, Parcelable.PARCELABLE_WRITE_RETURN_VALUE)
     }
 
     constructor(parcel: Parcel) : this() {
